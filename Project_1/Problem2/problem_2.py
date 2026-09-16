@@ -26,11 +26,16 @@ __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
 
-from collections.abc import Generator, Iterable
-from typing import TYPE_CHECKING, Generic, TypeVar, cast, overload, Protocol, Any
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Generic,
+    Protocol,
+    TypeVar,
+)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from collections.abc import Generator, Iterable
 
 T = TypeVar("T")
 
@@ -47,7 +52,8 @@ C = TypeVar("C", bound=SupportsLe)
 class Node(Generic[T]):
     """Node class.
 
-    Keeps track of a value and an optional left and right node."""
+    Keeps track of a value and an optional left and right node.
+    """
 
     __slots__ = ("left", "right", "value")
 
@@ -66,7 +72,8 @@ class Node(Generic[T]):
         """Return representation of this class.
 
         Does not show left or right nodes directly to avoid infinite
-        recursion."""
+        recursion.
+        """
         extras = []
         if self.left is not None:
             extras.append("<left>")
@@ -116,10 +123,10 @@ class Node(Generic[T]):
         lines.append(repr(self))
         children = tuple(self.children)
         for idx, child in enumerate(children):
-            end = (idx+1) == len(children)
+            end = (idx + 1) == len(children)
             child_lines = iter(child.render_tree_lines())
             connect = "├└"[end]
-            lines.append(f'{connect}{next(child_lines)}')
+            lines.append(f"{connect}{next(child_lines)}")
             child_connect = "│ "[end]
             for line in child_lines:
                 lines.append(f"{child_connect}{line}")
@@ -142,6 +149,7 @@ def iterable_getitem(iterable: Iterable[T], index: int) -> T:
 
     Raises:
         ValueError: if index negative or out of bounds.
+
     """
     if index < 0:
         raise IndexError
@@ -171,6 +179,7 @@ class BinaryTree(Generic[C]):
         Args:
             iterable (Iterable[C] | None): Iterable object to initialize
             from. Values must be comparable with <=.
+
         """
         self.root: Node[C] | None = None
 
@@ -204,7 +213,7 @@ class BinaryTree(Generic[C]):
         """Return representation of self."""
         items = ", ".join(map(repr, self))
         if items:
-            items = f'({items})'
+            items = f"({items})"
         return f"{self.__class__.__name__}({items})"
 
     def __len__(self) -> int:
@@ -213,8 +222,6 @@ class BinaryTree(Generic[C]):
             return 0
 
         count = 0
-        current: Node[C] | None = self.root
-
         for _node in self.root.inorder():
             count += 1
         return count
@@ -231,6 +238,7 @@ class BinaryTree(Generic[C]):
 
         Raises:
             KeyError: if tree is empty.
+
         """
         if self.root is None:
             raise KeyError
@@ -258,6 +266,7 @@ class BinaryTree(Generic[C]):
 
         Raises:
             KeyError: if tree is empty.
+
         """
         _prior, current = self._find_node_position_prior(value)
 
@@ -281,12 +290,12 @@ class BinaryTree(Generic[C]):
         for item in iterable:
             self.add(item)
 
-##    def __ior__(self, rhs: object | Iterable[C]) -> Self:
-##        """Self |= rhs."""
-##        if not isinstance(rhs, Iterable):
-##            return NotImplemented
-##        self.update(rhs)
-##        return self
+    ##    def __ior__(self, rhs: object | Iterable[C]) -> Self:
+    ##        """Self |= rhs."""
+    ##        if not isinstance(rhs, Iterable):
+    ##            return NotImplemented
+    ##        self.update(rhs)
+    ##        return self
 
     def remove(self, value: C) -> None:
         """Remove a value from the tree; it must be a member.
@@ -298,13 +307,13 @@ class BinaryTree(Generic[C]):
 
         Raises:
             KeyError: value is not a member of this tree.
-        """
 
+        """
         prior, target = self._find_node_position_prior(value)
 
         if target.value != value:
-            #print(f'{prior = }')
-            #print(f'{target = }')
+            # print(f'{prior = }')
+            # print(f'{target = }')
             raise KeyError
 
         # check if literally same object, not equality
@@ -313,15 +322,15 @@ class BinaryTree(Generic[C]):
         else:
             prior.right = None
 
-        # add child nodes from removed item back on.        
+        # add child nodes from removed item back on.
         # there is probably a smarter way to do this but it works.
         for child in target.children:
-            #print(f'{child = }')
+            # print(f'{child = }')
             self.update(node.value for node in child.inorder())
 
     def discard(self, value: C) -> None:
         """Remove an element from the tree if it is a member."""
-        try:
+        try:  # noqa: SIM105
             self.remove(value)
         except KeyError:
             pass
@@ -343,7 +352,7 @@ class BinaryTree(Generic[C]):
         while current is not None:
             if current.value == value:
                 return True
-            if current.value <= value:
+            if current.value <= value:  # noqa: SIM108
                 current = current.left
             else:
                 current = current.right
@@ -359,7 +368,7 @@ class BinaryTree(Generic[C]):
 def run() -> None:
     """Run program."""
     char_tree = BinaryTree("1234561245")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     for value in char_tree:
         assert value in char_tree, f"{value!r} not in char_tree"
@@ -376,28 +385,28 @@ def run() -> None:
     print(" ".join(char_tree.postorder()))
     print()
     char_tree.remove("6")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     print(f'{"6" in char_tree = }')
     print()
     char_tree.remove("5")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     print()
     char_tree.remove("5")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     print()
     char_tree.remove("2")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     print()
     char_tree.add("0")
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
     print()
     char_tree.clear()
-    print(f'{char_tree = }')
+    print(f"{char_tree = }")
     print(char_tree.render())
 
 

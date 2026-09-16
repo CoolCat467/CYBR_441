@@ -76,7 +76,7 @@ Global/Class Constants	|CAPS_WITH_UNDER	|_CAPS_WITH_UNDER
 Global/Class Variables|	lower_with_under	|_lower_with_under
 Instance Variables	|lower_with_under	|_lower_with_under (protected)
 Method Names	|lower_with_under()	|_lower_with_under() (protected)
-Function/Method Parameters	|lower_with_under| |	
+Function/Method Parameters	|lower_with_under| |
 Local Variables|	lower_with_under	| |
 ### Conditionals
 Do not use conditional expressions.  AI code may use conditional expressions, but be sure it works properly.  A conditional expression looks like the following: `x = 1 if cond else 2`.
@@ -124,7 +124,7 @@ of the road connecting them.
 ```
 
 For functions, you need to provide documentation for all functions that are nontrivial in size or have non-obvious logic.  So for example, getters and setters normally will not need documentation unless there are involved input validation schemes used.
-The goal of this documentation is for someone else (a partner, myself, yourself at a future date) to be able to write a call to the function without reading the code.  Certain parts of the function should be documented in special sections.  Each section should start with a heading line which ends in a colon.  
+The goal of this documentation is for someone else (a partner, myself, yourself at a future date) to be able to write a call to the function without reading the code.  Certain parts of the function should be documented in special sections.  Each section should start with a heading line which ends in a colon.
 * Args: list each parameter by name, followed by a colon and a description.
 * Returns: what should be returned, along with the type.
 * Raises: only necessary if there are exceptions that might be raised.

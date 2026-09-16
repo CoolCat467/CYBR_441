@@ -1,4 +1,4 @@
-## Contributers
+## Contributors
 - CoolCat467
 
 ## Purpose

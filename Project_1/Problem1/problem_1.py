@@ -38,7 +38,8 @@ T = TypeVar("T")
 class Student:
     """Student class.
 
-    Keeps track of name, age, and GPA."""
+    Keeps track of name, age, and GPA.
+    """
 
     __slots__ = ("_age", "_gpa", "_name")
 
@@ -92,7 +93,8 @@ class Student:
 class Node(Generic[T]):
     """Node class.
 
-    Keeps track of a value and an optional next and prior node."""
+    Keeps track of a value and an optional next and prior node.
+    """
 
     __slots__ = ("next", "prior", "value")
 
@@ -111,7 +113,8 @@ class Node(Generic[T]):
         """Return representation of this class.
 
         Does not show next or prior nodes directly to avoid infinite
-        recursion."""
+        recursion.
+        """
         extras = []
         if self.next is not None:
             extras.append("<next>")
@@ -138,6 +141,7 @@ def iterable_getitem(iterable: Iterable[T], index: int) -> T:
 
     Raises:
         ValueError: if index negative or out of bounds.
+
     """
     if index < 0:
         raise IndexError
@@ -162,6 +166,7 @@ class Deque(Generic[T]):
         Args:
             iterable (Iterable[T] | None): Iterable object to initialize
             from.
+
         """
         self.head: Node[T] | None = None
         self.tail: Node[T] | None = None
@@ -223,6 +228,7 @@ class Deque(Generic[T]):
 
         Raises:
             IndexError: When index out of bounds.
+
         """
         if self.head is None or self.tail is None:
             raise IndexError
@@ -255,6 +261,7 @@ class Deque(Generic[T]):
 
         Raises:
             IndexError: Invalid index.
+
         """
         if isinstance(index, slice):
             return self._getitem_slice(index)
@@ -272,6 +279,7 @@ class Deque(Generic[T]):
 
         Returns:
             New Deque from slice index values.
+
         """
         slice_range = range(*slice_.indices(len(self)))
         return self.__class__(self[x] for x in slice_range)
@@ -305,6 +313,7 @@ class Deque(Generic[T]):
         Raises:
             IndexError: on invalid index.
             ValueError: index is a slice but value is not an iterable.
+
         """
         if isinstance(index, slice):
             if not isinstance(value, Iterable):
@@ -340,8 +349,8 @@ class Deque(Generic[T]):
 
         Returns:
             Nothing.
-        """
 
+        """
         if self.head is None:
             self.head = self.tail = Node(value)
             return
@@ -415,6 +424,7 @@ class Deque(Generic[T]):
 
         Raises:
             IndexError: if deque is empty or index is out of range.
+
         """
         node = self._node_getitem(index)
         prior = node.prior
@@ -459,6 +469,7 @@ class Deque(Generic[T]):
             Integer index or slice indices of value(s) to delete.
 
         Raises: IndexError on invalid index.
+
         """
         if isinstance(index, slice):
             self._delitem_slice(index)
@@ -491,6 +502,7 @@ class Deque(Generic[T]):
 
         Raises:
             IndexError: if deque is empty.
+
         """
         return self.pop(0)
 
@@ -512,6 +524,7 @@ class Deque(Generic[T]):
 
         Raises:
             ValueError: if object equivalent to value is not present.
+
         """
         for index, item in enumerate(self):
             if index < start:
@@ -551,59 +564,59 @@ class Deque(Generic[T]):
         self.pop(index)
         return True
 
-##    def reverse(self) -> None:
-##        """Reverse *IN PLACE*."""
-##        if self.head is None or self.tail is None:
-##            return
-##
-##        current_head = self.head
-##        current_tail = self.tail
-##
-##        self.head, self.tail = self.tail, self.head
-##
-##        # 1234567
-##        # ^     ^
-##        # 7234561
-##        #  ^   ^
-##        # 7634521
-##        #   ^ ^
-##        # 7654321
-##
-##        while current_head is not current_tail:
-##            head_forward = current_head.next
-##            tail_backward = current_tail.prior
-##            assert head_forward is not None
-##            assert tail_backward is not None
-##
-##            head_backward = current_head.prior
-##            tail_forward = current_tail.next
-##
-##            even_length_middle_swap = current_head.next is current_tail
-##
-##            # Start of swap connections to outer
-##            if head_backward is not None:
-##                head_backward.next = current_tail
-##            current_tail.prior = head_backward
-##
-##            if tail_forward is not None:
-##                tail_forward.prior = current_head
-##            current_head.next = tail_forward
-##
-##            # Start of swap connections to inner
-##            if even_length_middle_swap:
-##                current_tail.next = current_head
-##                current_head.prior = current_tail
-##                break
-##
-##            current_tail.next = head_forward
-##            head_forward.prior = current_tail
-##
-##            current_head.prior = tail_backward
-##            tail_backward.next = current_head
-##
-##            # Next layer
-##            current_head = head_forward
-##            current_tail = tail_backward
+    ##    def reverse(self) -> None:
+    ##        """Reverse *IN PLACE*."""
+    ##        if self.head is None or self.tail is None:
+    ##            return
+    ##
+    ##        current_head = self.head
+    ##        current_tail = self.tail
+    ##
+    ##        self.head, self.tail = self.tail, self.head
+    ##
+    ##        # 1234567
+    ##        # ^     ^
+    ##        # 7234561
+    ##        #  ^   ^
+    ##        # 7634521
+    ##        #   ^ ^
+    ##        # 7654321
+    ##
+    ##        while current_head is not current_tail:
+    ##            head_forward = current_head.next
+    ##            tail_backward = current_tail.prior
+    ##            assert head_forward is not None
+    ##            assert tail_backward is not None
+    ##
+    ##            head_backward = current_head.prior
+    ##            tail_forward = current_tail.next
+    ##
+    ##            even_length_middle_swap = current_head.next is current_tail
+    ##
+    ##            # Start of swap connections to outer
+    ##            if head_backward is not None:
+    ##                head_backward.next = current_tail
+    ##            current_tail.prior = head_backward
+    ##
+    ##            if tail_forward is not None:
+    ##                tail_forward.prior = current_head
+    ##            current_head.next = tail_forward
+    ##
+    ##            # Start of swap connections to inner
+    ##            if even_length_middle_swap:
+    ##                current_tail.next = current_head
+    ##                current_head.prior = current_tail
+    ##                break
+    ##
+    ##            current_tail.next = head_forward
+    ##            head_forward.prior = current_tail
+    ##
+    ##            current_head.prior = tail_backward
+    ##            tail_backward.next = current_head
+    ##
+    ##            # Next layer
+    ##            current_head = head_forward
+    ##            current_tail = tail_backward
 
     # Turns out this can be made way simpler just swapping the node
     # values instead of moving the nodes themselves around.
@@ -627,7 +640,10 @@ class Deque(Generic[T]):
             even_length_middle_swap = current_head.next is current_tail
 
             # way easier to just swap values than try to swap connections
-            current_head.value, current_tail.value = current_tail.value, current_head.value
+            current_head.value, current_tail.value = (
+                current_tail.value,
+                current_head.value,
+            )
 
             if even_length_middle_swap:
                 break

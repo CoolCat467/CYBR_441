@@ -1,3 +1,5 @@
+"""Problem 3."""
+
 # Problem 1:
 # Time spent:
 # ~8 hours, mostly because I wanted to match
@@ -15,7 +17,7 @@
 # Problem 2:
 # Time spent:
 # ~3 hours on and off, got stuck on figuring out how to keep order
-# consistant and thought I might have to make it an AVL tree and be
+# consistent and thought I might have to make it an AVL tree and be
 # balanced, but I got it to work without that.
 #
 # Difficulty:
