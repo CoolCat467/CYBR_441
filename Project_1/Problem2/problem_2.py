@@ -1,4 +1,4 @@
-"""Problem 2 - Student class & BinaryTree."""
+"""Problem 2 - Binary search tree."""
 
 # Programmed by CoolCat467
 
