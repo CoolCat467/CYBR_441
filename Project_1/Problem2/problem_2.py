@@ -137,28 +137,6 @@ class Node(Generic[T]):
         return "\n".join(self.render_tree_lines())
 
 
-def iterable_getitem(iterable: Iterable[T], index: int) -> T:
-    """Return value at given index in iterable.
-
-    Args:
-        iterable (Iterable[T]): Iterable of T objects
-        index (int): Number of steps to walk through iterable
-
-    Returns:
-        T object at given index in iterable.
-
-    Raises:
-        ValueError: if index negative or out of bounds.
-
-    """
-    if index < 0:
-        raise IndexError
-    for i, value in enumerate(iterable):
-        if i == index:
-            return value
-    raise IndexError
-
-
 class BinaryTree(Generic[C]):
     """Binary Tree class.
 
