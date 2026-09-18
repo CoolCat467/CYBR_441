@@ -294,8 +294,11 @@ class BinaryTree(Generic[C]):
             # print(f'{target = }')
             raise KeyError
 
-        # check if literally same object, not equality
-        if target is prior.left:
+        if prior is target:
+            self.root = None
+        
+        elif target is prior.left:
+            # check if literally same object, not equality
             prior.left = None
         else:
             prior.right = None
