@@ -290,13 +290,29 @@ class BinaryTree(Generic[C]):
         prior, target = self._find_node_position_prior(value)
 
         if target.value != value:
+            assert self.root is not None
             # print(f'{prior = }')
             # print(f'{target = }')
+            if value in self:
+                # exists but didn't find properly.
+                # would be better to fix how this function works, this
+                # is more of a bandaid fix than anything to be honest.
+                # print(self.render())
+                target = self.root
+                self.root = None
+                for child in target.children:
+                    self.update(node.value for node in child.inorder())
+                if target.value == value:
+                    return
+                self.add(target.value)
+                # print(self.render())
+                self.remove(value)
+                return
             raise KeyError
 
         if prior is target:
             self.root = None
-        
+
         elif target is prior.left:
             # check if literally same object, not equality
             prior.left = None
@@ -369,6 +385,14 @@ def run() -> None:
     print(f"{char_tree = }")
     print(char_tree.render())
     print(f'{"6" in char_tree = }')
+    print()
+    char_tree.remove("1")
+    print(f"{char_tree = }")
+    print(char_tree.render())
+    print()
+    char_tree.remove("1")
+    print(f"{char_tree = }")
+    print(char_tree.render())
     print()
     char_tree.remove("5")
     print(f"{char_tree = }")
