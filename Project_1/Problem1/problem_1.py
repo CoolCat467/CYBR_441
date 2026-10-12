@@ -30,7 +30,7 @@ from collections.abc import Generator, Iterable
 from typing import TYPE_CHECKING, Generic, TypeVar, cast, overload
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
 T = TypeVar("T")
 

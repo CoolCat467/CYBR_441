@@ -28,8 +28,8 @@ __license__ = "GNU General Public License Version 3"
 
 from pathlib import Path
 
-from node import Node
 from graph import Graph
+from node import Node
 from state import State
 
 
@@ -39,12 +39,16 @@ def add_new_state(
     graph: Graph,
     id_state_map: dict[int, State],
 ) -> tuple[int, bool]:
+    """Return new state id and if this state exists already.
+
+    Add new state to graph and other places.
+    """
     state_repr_id = state.repr_id()
 
     found_prev_id = state_id_map.get(state_repr_id)
     if found_prev_id is not None:
         return found_prev_id, True
-    
+
     state_id = len(state_id_map)
     state_id_map[state_repr_id] = state_id
     id_state_map[state_id] = state
@@ -56,28 +60,41 @@ def add_new_state(
     return state_id, False
 
 
-def generate_graph_and_states(tile_count: int) -> tuple[Graph, dict[int, State]]:
+def generate_graph_and_states(
+    tile_count: int,
+) -> tuple[Graph, dict[int, State]]:
+    """Return tuple of graph and state dictionary for world with given tile count."""
     graph = Graph()
 
     state_id_map: dict[str, int] = {}
     id_state_map: dict[int, State] = {}
 
     initial_state = State.initial_state(tile_count)
-    initial_id, _visited = add_new_state(initial_state, state_id_map, graph, id_state_map)
-    
+    initial_id, _visited = add_new_state(
+        initial_state,
+        state_id_map,
+        graph,
+        id_state_map,
+    )
+
     state_queue: list[tuple[int, State]] = [(initial_id, initial_state)]
 
     while state_queue:
         state_id, state = state_queue.pop(0)
-        #print(f'{(state_id, state) = }')
+        # print(f'{(state_id, state) = }')
 
         for redundant, new_state in state.redundant_actions():
-            #print(f'{(redundant, new_state) = }')
+            # print(f'{(redundant, new_state) = }')
             if redundant:
                 graph.add_edge(state_id, state_id)
                 continue
 
-            new_state_id, visited = add_new_state(new_state, state_id_map, graph, id_state_map)
+            new_state_id, visited = add_new_state(
+                new_state,
+                state_id_map,
+                graph,
+                id_state_map,
+            )
             graph.add_edge(state_id, new_state_id)
 
             if visited:
@@ -87,14 +104,21 @@ def generate_graph_and_states(tile_count: int) -> tuple[Graph, dict[int, State]]
 
 
 def generate_graph(tile_count: int) -> Graph:
+    """Return graph for world with given tile count."""
     graph, _states = generate_graph_and_states(tile_count)
     return graph
 
 
 class World:
+    """World class.
+
+    Has a graph and tile count.
+    """
+
     __slots__ = ("graph", "tiles")
 
     def __init__(self, num: int) -> None:
+        """Initialize world from tile count."""
         self.tiles = num
         self.graph: Graph
 

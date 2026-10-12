@@ -24,17 +24,17 @@ __title__ = "ocif"
 __author__ = "CoolCat467"
 __license__ = "GNU General Public License Version 3"
 
-from typing import TYPE_CHECKING, Final, Generator
-
-from render_images import color
+from typing import TYPE_CHECKING, Final
 
 import numpy as np
 import numpy.typing as npt
 
+from render_images import color
+
 if TYPE_CHECKING:
     import io
-
-    from typing_extensions import Self
+    from collections.abc import Generator
+    from typing import Self
 
 OCIF_SIGNATURE: Final = "OCIF"
 
@@ -43,12 +43,12 @@ class Picture:
     """Picture."""
 
     __slots__ = (
-        "width",
+        "alpha",
+        "background",
+        "foreground",
         "height",
         "symbol",
-        "foreground",
-        "background",
-        "alpha",
+        "width",
     )
 
     def __init__(

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
-"""Generate Images
+"""Generate Images and state documentation.
 
 Usage:
 python generate_images.py > README.md
@@ -32,17 +31,20 @@ __author__ = "CoolCat467"
 __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
+from os import environ, makedirs
 from pathlib import Path
-from os import makedirs, environ
+from typing import TYPE_CHECKING
 
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "1"
-
-from state import State
-from world import generate_graph_and_states
-from interface import MAX_GENERATED_TILES
-import render_images
+environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 import pygame
+import render_images
+from interface import MAX_GENERATED_TILES
+from world import generate_graph_and_states
+
+if TYPE_CHECKING:
+    from node import Node
+    from state import State
 
 
 def state_to_picture(state: State) -> render_images.RenderedPicture:
@@ -52,7 +54,7 @@ def state_to_picture(state: State) -> render_images.RenderedPicture:
 
     width = max(map(len, lines))
     height = len(lines)
-    
+
     picture = render_images.RenderedPicture(width, height)
 
     bg = render_images.color.rgb_to_integer(18, 18, 18)
@@ -75,7 +77,7 @@ def state_to_picture(state: State) -> render_images.RenderedPicture:
 
 def render_node(node: Node, state: State, image_height: int) -> None:
     """Render node-state pair and save resulting image."""
-    print(f'* {node.get_id()}\n```\n{state}\n```')
+    print(f"* {node.get_id()}\n```\n{state}\n```")
     image_path = Path(node.get_image()).absolute()
 
     if not image_path.parent.exists():
@@ -85,7 +87,7 @@ def render_node(node: Node, state: State, image_height: int) -> None:
 
     font_size = picture.get_fontsize(image_height, image_height)
     surface = picture.render(font_size)
-    
+
     pygame.image.save(surface, str(image_path))
 
 
@@ -106,28 +108,27 @@ python interface.py
 - Press either BFS or DFS search button
 - Press through states with next and back buttons
 
-## States
-""")
+## States""")
 
-    for tile_count in range(2, MAX_GENERATED_TILES+1):
-        print(f"""## {tile_count} Tiles:
+    for tile_count in range(2, MAX_GENERATED_TILES + 1):
+        print(f"""\n## {tile_count} Tiles:
 <details>
 <summary>All {tile_count}-tile states</summary>
 """)
-        #print(f"Rendering states for {tile_count} tiles...")
-        
+        # print(f"Rendering states for {tile_count} tiles...")
+
         graph, states = generate_graph_and_states(tile_count)
         nodes = graph.get_nodes()
 
         for node in nodes:
             render_node(node, states[node.get_id()], image_height)
-        #print(f"Rendered {len(nodes)} images.")
-        print("</details>\n")
-    #print("Action complete")
+        # print(f"Rendered {len(nodes)} images.")
+        print("</details>")
+    # print("Action complete")
 
 
 if __name__ == "__main__":
-    #print(f"{__title__} v{__version__}\nProgrammed by {__author__}.\n")
+    # print(f"{__title__} v{__version__}\nProgrammed by {__author__}.\n")
     try:
         pygame.init()
         run()

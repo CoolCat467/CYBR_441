@@ -25,14 +25,18 @@ __author__ = "CoolCat467"
 __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
-from node import Node
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from node import Node
 
 
 class Graph:
-    """Graph class
+    """Graph class.
 
     nodes: the list of nodes, these should be node objects
     """
+
     __slots__ = ("nodes",)
 
     def __init__(self, nodes: list[Node] | None = None) -> None:
@@ -85,7 +89,11 @@ class Graph:
 
         return path
 
-    def _dfs_internal(self, start_id: int, visited: frozenset[int]) -> tuple[bool, list[Node]]:
+    def _dfs_internal(
+        self,
+        start_id: int,
+        visited: frozenset[int],
+    ) -> tuple[bool, list[Node]]:
         current_node = self.get_node(start_id)
 
         if current_node.get_terminal():
@@ -96,10 +104,13 @@ class Graph:
             if connected_id in visited:
                 continue
 
-            success, path = self._dfs_internal(connected_id, visited | {connected_id})
+            success, path = self._dfs_internal(
+                connected_id,
+                visited | {connected_id},
+            )
 
             if success:
-                return True, [start_id] + path
+                return True, [start_id, *path]
 
         return False, []
 
@@ -108,4 +119,3 @@ class Graph:
         success, path = self._dfs_internal(start_id, frozenset((start_id,)))
         assert success
         return path
-        

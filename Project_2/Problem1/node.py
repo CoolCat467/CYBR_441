@@ -30,19 +30,22 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from os import PathLike
-
-    from typing_extensions import Self
+    from typing import Self
 
 
 class Node:
-    '''
-    image: an image file (.png works) that shows the state
-    id: the id for the state
-    connections: a list of the other states that can be reached from this state
-    what else do you want to add...?
-    '''
+    """Node.
 
-    __slots__ = ("image", "id_", "terminal", "connections")
+    Attributes:
+        image: an image file (.png works) that shows the state
+        id: the id for the state
+        connections:
+            a list of the other states that can be reached from this
+            state
+
+    """
+
+    __slots__ = ("connections", "id_", "image", "terminal")
 
     def __init__(
         self,
@@ -57,7 +60,7 @@ class Node:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.get_image()!r}, {self.get_id()!r})"
-        
+
     def get_image(self) -> str | PathLike[str] | None:
         return self.image
 
@@ -69,7 +72,7 @@ class Node:
 
     def get_terminal(self) -> bool:
         return self.terminal
-    
+
     def set_image(self, image: str | PathLike[str] | None) -> None:
         self.image = image
 

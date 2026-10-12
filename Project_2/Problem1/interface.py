@@ -27,17 +27,19 @@ __license__ = "GNU General Public License Version 3"
 
 import tkinter as tk
 from tkinter import messagebox
-from typing import Final
+from typing import TYPE_CHECKING, Final
 
 from world import World
-from graph import Graph
-from node import Node
 
+if TYPE_CHECKING:
+    from graph import Graph
+    from node import Node
 
 MAX_GENERATED_TILES: Final = 5
 
 
 class GraphInterface:
+    """Graph Interface tkinter application."""
 
     def __init__(self) -> None:
 
@@ -53,7 +55,7 @@ class GraphInterface:
         # Start node input
         tk.Label(
             self.__window,
-            text=f"Tile Count: (2-{MAX_GENERATED_TILES})"
+            text=f"Tile Count: (2-{MAX_GENERATED_TILES})",
         ).grid(row=0, column=0, padx=30, pady=5)
 
         self.__tiles_entry = tk.Entry(self.__window)
@@ -63,7 +65,7 @@ class GraphInterface:
         # Start node input
         tk.Label(
             self.__window,
-            text=f"Start Node ID: (0-{len(self.__graph.get_nodes())-1})"
+            text=f"Start Node ID: (0-{len(self.__graph.get_nodes()) - 1})",
         ).grid(row=1, column=0, padx=30, pady=5)
 
         self.__start_entry = tk.Entry(self.__window)
@@ -74,48 +76,36 @@ class GraphInterface:
         tk.Button(
             self.__window,
             text="Solve BFS",
-            command=self.solve_bfs
+            command=self.solve_bfs,
         ).grid(row=2, column=0, padx=30, pady=20)
 
         tk.Button(
             self.__window,
             text="Solve DFS",
-            command=self.solve_dfs
+            command=self.solve_dfs,
         ).grid(row=2, column=1, padx=30, pady=20)
 
         # Image display
         self.__image_label = tk.Label(self.__window)
-        self.__image_label.grid(
-            row=3,
-            column=0,
-            columnspan=2,
-            pady=40
-        )
+        self.__image_label.grid(row=3, column=0, columnspan=2, pady=40)
 
         # Information label
-        self.__info_label = tk.Label(
-            self.__window,
-            text="No solution loaded."
-        )
+        self.__info_label = tk.Label(self.__window, text="No solution loaded.")
 
-        self.__info_label.grid(
-            row=4,
-            column=0,
-            columnspan=2
-        )
+        self.__info_label.grid(row=4, column=0, columnspan=2)
 
         # Navigation buttons
         tk.Button(
             self.__window,
             text="Previous",
-            command=self.previous_state
+            command=self.previous_state,
         ).grid(row=5, column=0, pady=10)
 
-        tk.Button(
-            self.__window,
-            text="Next",
-            command=self.next_state
-        ).grid(row=5, column=1, pady=10)
+        tk.Button(self.__window, text="Next", command=self.next_state).grid(
+            row=5,
+            column=1,
+            pady=10,
+        )
 
     def reload_world(self) -> bool:
         """Return if loaded new world successfully."""
@@ -126,7 +116,7 @@ class GraphInterface:
         except ValueError:
             messagebox.showerror(
                 "Invalid Input",
-                "Please enter a valud tile count."
+                "Please enter a valid tile count.",
             )
             return False
         # Regenerate world
@@ -136,6 +126,7 @@ class GraphInterface:
 
     @property
     def __graph(self) -> Graph:
+        """Return current world graph."""
         return self.__world.get_graph()
 
     def solve_bfs(self) -> None:
@@ -146,16 +137,13 @@ class GraphInterface:
             start_id = int(self.__start_entry.get())
 
             ######
-            #NOTE: This is where it is calling your function
+            # NOTE: This is where it is calling your function
             ######
             self.__path = self.__graph.bfs(start_id)
             self.__current_step = 0
             print(f"Path for BFS: {self.__path}")
             if not self.__path:
-                messagebox.showinfo(
-                    "No Solution",
-                    "No goal node was found."
-                )
+                messagebox.showinfo("No Solution", "No goal node was found.")
                 return
 
             self.show_current_state()
@@ -163,7 +151,7 @@ class GraphInterface:
         except ValueError:
             messagebox.showerror(
                 "Invalid Input",
-                "Please enter a valid node ID."
+                "Please enter a valid node ID.",
             )
 
     def solve_dfs(self) -> None:
@@ -174,16 +162,13 @@ class GraphInterface:
             start_id = int(self.__start_entry.get())
 
             ######
-            #NOTE: This is where it is going to call your function
+            # NOTE: This is where it is going to call your function
             ######
             self.__path = self.__graph.dfs(start_id)
             self.__current_step = 0
             print(f"Path for DFS: {self.__path}")
             if not self.__path:
-                messagebox.showinfo(
-                    "No Solution",
-                    "No goal node was found."
-                )
+                messagebox.showinfo("No Solution", "No goal node was found.")
                 return
 
             self.show_current_state()
@@ -191,7 +176,7 @@ class GraphInterface:
         except ValueError:
             messagebox.showerror(
                 "Invalid Input",
-                "Please enter a valid node ID."
+                "Please enter a valid node ID.",
             )
 
     def show_current_state(self) -> None:
@@ -207,9 +192,7 @@ class GraphInterface:
 
         self.__photo = tk.PhotoImage(file=image_path)
 
-        self.__image_label.config(
-            image=self.__photo
-        )
+        self.__image_label.config(image=self.__photo)
 
         action_text = ""
         goal_text = ""
@@ -218,12 +201,14 @@ class GraphInterface:
             goal_text = " (GOAL)"
 
         self.__info_label.config(
-            text="\n".join((
-                f"Step {self.__current_step + 1}/{len(self.__path)}",
-                f"    Node ID: {node_id}",
-                f"    Previous Action: {action_text}",
-                f"{goal_text}",
-            ))
+            text="\n".join(
+                (
+                    f"Step {self.__current_step + 1}/{len(self.__path)}",
+                    f"    Node ID: {node_id}",
+                    f"    Previous Action: {action_text}",
+                    f"{goal_text}",
+                ),
+            ),
         )
 
     def next_state(self) -> None:
@@ -255,4 +240,3 @@ def run() -> None:
 
 if __name__ == "__main__":
     run()
-

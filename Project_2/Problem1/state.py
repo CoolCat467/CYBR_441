@@ -29,7 +29,7 @@ __license__ = "GNU General Public License Version 3"
 from typing import TYPE_CHECKING, NamedTuple
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
 
 class State(NamedTuple):
@@ -41,7 +41,7 @@ class State(NamedTuple):
         return cls(0, tuple(True for _ in range(tile_count)))
 
     def __str__(self) -> str:
-        tiles = ''.join('▓' if dust else '▒' for dust in self.tiles)
+        tiles = "".join("▓" if dust else "▒" for dust in self.tiles)
         indicator = " " * self.location + "^"
         return f"{tiles}\n{indicator}"
 
@@ -57,7 +57,7 @@ class State(NamedTuple):
             tuple(
                 dust if idx != self.location else False
                 for idx, dust in enumerate(self.tiles)
-            )
+            ),
         )
 
     def action_left(self) -> Self:
@@ -79,7 +79,9 @@ class State(NamedTuple):
             self.action_right(),
         )
 
-    def redundant_actions(self) -> tuple[tuple[bool, Self], tuple[bool, Self], tuple[bool, Self]]:
+    def redundant_actions(
+        self,
+    ) -> tuple[tuple[bool, Self], tuple[bool, Self], tuple[bool, Self]]:
         """Return tuple of bools where True redundant actions."""
         return tuple((state is self, state) for state in self.actions())
 

@@ -36,7 +36,7 @@ locally and submit a zip file of this directory instead.
 For this and future projects, be sure to include good style and
 documentation. Follow the guildelines of the style guide.  If there are
 any conflicts between this assignment and the style guide, prioritize
-the requirments of the assignment page.
+the requirements of the assignment page.
 
 ### AI Usage
 You may not use any AI tools in this project.
@@ -138,4 +138,3 @@ comments only.
 a. How much time did you spend on these two problems?
 
 b. How would you rate the difficulty of these two problems?
-

@@ -26,11 +26,10 @@ __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
 
-from typing import Final
 from pathlib import Path
+from typing import TYPE_CHECKING, Final
 
-from render_images import ocif
-
+import pygame
 from pygame.locals import (
     DROPFILE,
     K_ESCAPE,
@@ -40,8 +39,11 @@ from pygame.locals import (
     SRCALPHA,
     VIDEORESIZE,
 )
-import numpy as np
-import pygame
+
+from render_images import ocif
+
+if TYPE_CHECKING:
+    import numpy as np
 
 FPS: Final = 2
 FONT_FILE: Final = Path(__file__).absolute().parent / "unifont-15.1.05.otf"
@@ -188,4 +190,3 @@ if __name__ == "__main__":
         run()
     finally:
         pygame.quit()
-
