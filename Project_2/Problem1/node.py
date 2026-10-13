@@ -42,6 +42,7 @@ class Node:
         connections:
             a list of the other states that can be reached from this
             state
+        terminal: is this state a solution
 
     """
 
@@ -53,33 +54,42 @@ class Node:
         node_id: int = -1,
         terminal: bool = False,
     ) -> None:
+        """Initialize node."""
         self.image = image
         self.id_ = node_id
         self.connections: list[Self] = []
         self.terminal = terminal
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.get_image()!r}, {self.get_id()!r})"
+        """Return representation of self."""
+        return f"{self.__class__.__name__}({self.get_image()!r}, {self.get_id()!r}, {self.get_terminal()!r})"
 
     def get_image(self) -> str | PathLike[str] | None:
+        """Return optional state image path."""
         return self.image
 
     def get_id(self) -> int:
+        """Return state id number."""
         return self.id_
 
     def get_connections(self) -> list[Self]:
+        """Return connected states."""
         return self.connections
 
     def get_terminal(self) -> bool:
+        """Return if this state is terminal."""
         return self.terminal
 
     def set_image(self, image: str | PathLike[str] | None) -> None:
+        """Set this state's image file path."""
         self.image = image
 
     def set_id(self, node_id: int) -> None:
+        """Set this state's id."""
         self.id_ = node_id
 
-    def add_connection(self, other_node: Self, action: None = None) -> None:
+    def add_connection(self, other_node: Self) -> None:
+        """Add connection to another node if the connection doesn't exist already."""
         if other_node in self.connections:
             return
         self.connections.append(other_node)

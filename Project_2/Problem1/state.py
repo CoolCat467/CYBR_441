@@ -33,46 +33,63 @@ if TYPE_CHECKING:
 
 
 class State(NamedTuple):
+    """Vacuum world state tuple."""
+
     location: int
-    tiles: tuple[bool, ...]
+    dust: tuple[bool, ...]
 
     @classmethod
     def initial_state(cls, tile_count: int) -> Self:
+        """Return an initial state for a world with a given number of tiles."""
         return cls(0, tuple(True for _ in range(tile_count)))
 
     def __str__(self) -> str:
-        tiles = "".join("▓" if dust else "▒" for dust in self.tiles)
+        """Return a string representation of the world."""
+        dust = "".join("▓" if dust else "▒" for dust in self.dust)
         indicator = " " * self.location + "^"
-        return f"{tiles}\n{indicator}"
+        return f"{dust}\n{indicator}"
 
     @classmethod
-    def new_state(cls, location: int, tiles: tuple[bool, ...]) -> Self:
-        return cls(location, tiles)
+    def new_state(cls, location: int, dust: tuple[bool, ...]) -> Self:
+        """Return a new state instance."""
+        return cls(location, dust)
 
     def action_clean(self) -> Self:
-        if not self.tiles[self.location]:
+        """Return a new world state after performing the clean action."""
+        if not self.dust[self.location]:
             return self
         return self.new_state(
             self.location,
+            # tile dust is the same except for the tile the robot is
+            # currently on, which is set to false if not already.
             tuple(
                 dust if idx != self.location else False
-                for idx, dust in enumerate(self.tiles)
+                for idx, dust in enumerate(self.dust)
             ),
         )
 
     def action_left(self) -> Self:
+        """Return a new world state after performing the move left action.
+
+        Trying to move beyond the edge of the map does nothing.
+        """
         new_location = max(0, self.location - 1)
         if new_location == self.location:
             return self
-        return self.new_state(new_location, self.tiles)
+        return self.new_state(new_location, self.dust)
 
     def action_right(self) -> Self:
-        new_location = min(self.location + 1, len(self.tiles) - 1)
+        """Return a new world state after performing the move right action.
+
+        Trying to move beyond the edge of the map does nothing.
+        """
+        new_location = min(self.location + 1, len(self.dust) - 1)
         if new_location == self.location:
             return self
-        return self.new_state(new_location, self.tiles)
+        return self.new_state(new_location, self.dust)
 
     def actions(self) -> tuple[Self, Self, Self]:
+        """Return the results of all possible actions able to be performed at this state."""
         return (
             self.action_left(),
             self.action_clean(),
@@ -82,12 +99,17 @@ class State(NamedTuple):
     def redundant_actions(
         self,
     ) -> tuple[tuple[bool, Self], tuple[bool, Self], tuple[bool, Self]]:
-        """Return tuple of bools where True redundant actions."""
+        """Return tuple of bool and new state tuples where True is a redundant action."""
         return tuple((state is self, state) for state in self.actions())
 
     def terminal(self) -> bool:
-        return not any(self.tiles)
+        """Return if there is not any dust remaining in the world."""
+        return not any(self.dust)
 
     def repr_id(self) -> str:
-        dust_data = "".join(str(int(dust)) for dust in self.tiles)
+        """Return a representation of this state as an identifier string.
+
+        Follows {location}_{tile dust states}.
+        """
+        dust_data = "".join(str(int(dust)) for dust in self.dust)
         return f"{self.location}_{dust_data}"

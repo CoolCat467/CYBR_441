@@ -128,12 +128,15 @@ class World:
         self.set_graph(generate_graph(num))
 
     def get_tile_count(self) -> int:
+        """Return the number of tiles that exist in this world."""
         return self.tiles
 
     def get_graph(self) -> Graph:
+        """Return the graph for this world."""
         assert self.graph is not None
         return self.graph
 
-    def set_graph(self, gr: Graph) -> None:
-        assert isinstance(gr, Graph)
-        self.graph = gr
+    def set_graph(self, graph: Graph) -> None:
+        """Set the graph attached to this world."""
+        assert isinstance(graph, Graph)
+        self.graph = graph

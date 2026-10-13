@@ -42,7 +42,7 @@ class GraphInterface:
     """Graph Interface tkinter application."""
 
     def __init__(self) -> None:
-
+        """Initialize graph interface."""
         self.__world = World(2)
 
         self.__path: list[Node] = []
@@ -130,6 +130,7 @@ class GraphInterface:
         return self.__world.get_graph()
 
     def solve_bfs(self) -> None:
+        """Solve with breadth first search with current parameters."""
         if not self.reload_world():
             return
 
@@ -155,6 +156,7 @@ class GraphInterface:
             )
 
     def solve_dfs(self) -> None:
+        """Solve with depth first search with current parameters."""
         if not self.reload_world():
             return
 
@@ -180,7 +182,7 @@ class GraphInterface:
             )
 
     def show_current_state(self) -> None:
-
+        """Display the current state."""
         if not self.__path:
             return
 
@@ -212,7 +214,7 @@ class GraphInterface:
         )
 
     def next_state(self) -> None:
-
+        """Display the next state."""
         if not self.__path:
             return
 
@@ -221,7 +223,7 @@ class GraphInterface:
             self.show_current_state()
 
     def previous_state(self) -> None:
-
+        """Display the prior state."""
         if not self.__path:
             return
 
@@ -230,10 +232,12 @@ class GraphInterface:
             self.show_current_state()
 
     def run(self) -> None:
+        """Run tkinter main loop."""
         self.__window.mainloop()
 
 
 def run() -> None:
+    """Run application."""
     gui = GraphInterface()
     gui.run()
 

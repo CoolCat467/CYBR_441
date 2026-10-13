@@ -40,32 +40,36 @@ class Graph:
     __slots__ = ("nodes",)
 
     def __init__(self, nodes: list[Node] | None = None) -> None:
+        """Initialize with optional initial nodes."""
         self.nodes: list[Node] = []
 
         if nodes is not None:
             self.nodes = nodes
 
     def __repr__(self) -> str:
+        """Return representation of self."""
         return f"{self.__class__.__name__}({self.nodes!r})"
 
     def add_node(self, node: Node) -> None:
+        """Add a node to the graph."""
         self.nodes.append(node)
 
     def get_nodes(self) -> list[Node]:
+        """Return the list of all nodes."""
         return self.nodes
 
     def get_node(self, node_id: int) -> Node:
+        """Return node from node id."""
         if node_id < 0 or node_id >= len(self.nodes):
             raise ValueError("Invalid node id")
         return self.nodes[node_id]
 
     def add_edge(self, source_id: int, dest_id: int) -> None:
+        """Add connection from source id to dest id node."""
         self.get_node(source_id).add_connection(self.get_node(dest_id))
 
     def bfs(self, start_id: int) -> list[Node]:
         """Return the Breadth First Search path to terminal starting at given node."""
-        path = []
-
         trail: dict[int, int] = {}
 
         to_visit = [start_id]
@@ -82,6 +86,8 @@ class Graph:
 
                 trail[connected_id] = current
 
+        path = []
+
         while current != start_id:
             path.insert(0, current)
             current = trail[current]
@@ -94,6 +100,10 @@ class Graph:
         start_id: int,
         visited: frozenset[int],
     ) -> tuple[bool, list[Node]]:
+        """Return tuple of success bool, node path list.
+
+        Internal recursive depth first search helper.
+        """
         current_node = self.get_node(start_id)
 
         if current_node.get_terminal():
@@ -115,7 +125,7 @@ class Graph:
         return False, []
 
     def dfs(self, start_id: int) -> list[Node]:
-        """Return the Breadth First Search path to terminal starting at given node."""
+        """Return the Depth First Search path to terminal starting at given node."""
         success, path = self._dfs_internal(start_id, frozenset((start_id,)))
         assert success
         return path
