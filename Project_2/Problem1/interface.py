@@ -33,7 +33,6 @@ from world import World
 
 if TYPE_CHECKING:
     from graph import Graph
-    from node import Node
 
 MAX_GENERATED_TILES: Final = 5
 
