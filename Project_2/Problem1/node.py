@@ -32,6 +32,8 @@ if TYPE_CHECKING:
     from os import PathLike
     from typing import Self
 
+    from state import Action
+
 
 class Node:
     """Node.
@@ -57,7 +59,7 @@ class Node:
         """Initialize node."""
         self.image = image
         self.id_ = node_id
-        self.connections: list[Self] = []
+        self.connections: list[tuple[Self, Action]] = []
         self.terminal = terminal
 
     def __repr__(self) -> str:
@@ -72,9 +74,13 @@ class Node:
         """Return state id number."""
         return self.id_
 
-    def get_connections(self) -> list[Self]:
-        """Return connected states."""
+    def get_connections(self) -> list[tuple[Self, Action]]:
+        """Return connected nodes and actions that got there."""
         return self.connections
+
+    def get_connection_nodes(self) -> list[Self]:
+        """Return connected nodes."""
+        return [node for node, _action in self.connections]
 
     def get_terminal(self) -> bool:
         """Return if this state is terminal."""
@@ -88,8 +94,8 @@ class Node:
         """Set this state's id."""
         self.id_ = node_id
 
-    def add_connection(self, other_node: Self) -> None:
+    def add_connection(self, other_node: Self, action: Action) -> None:
         """Add connection to another node if the connection doesn't exist already."""
-        if other_node in self.connections:
+        if other_node in self.get_connection_nodes():
             return
-        self.connections.append(other_node)
+        self.connections.append((other_node, action))

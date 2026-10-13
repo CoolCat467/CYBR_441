@@ -26,10 +26,19 @@ __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
 
+from enum import IntEnum, auto
 from typing import TYPE_CHECKING, NamedTuple
 
 if TYPE_CHECKING:
     from typing import Self
+
+
+class Action(IntEnum):
+    """Action Enum."""
+
+    left = 0
+    clean = auto()
+    right = auto()
 
 
 class State(NamedTuple):
@@ -90,6 +99,7 @@ class State(NamedTuple):
 
     def actions(self) -> tuple[Self, Self, Self]:
         """Return the results of all possible actions able to be performed at this state."""
+        # keep matching with Action enum.
         return (
             self.action_left(),
             self.action_clean(),

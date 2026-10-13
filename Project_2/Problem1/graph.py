@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from node import Node
+    from state import Action
 
 
 class Graph:
@@ -64,42 +65,51 @@ class Graph:
             raise ValueError("Invalid node id")
         return self.nodes[node_id]
 
-    def add_edge(self, source_id: int, dest_id: int) -> None:
+    def add_edge(self, source_id: int, dest_id: int, action: Action) -> None:
         """Add connection from source id to dest id node."""
-        self.get_node(source_id).add_connection(self.get_node(dest_id))
+        self.get_node(source_id).add_connection(self.get_node(dest_id), action)
 
-    def bfs(self, start_id: int) -> list[int]:
+    def bfs(self, start_id: int) -> list[tuple[int, Action | None]]:
         """Return the Breadth First Search path to terminal starting at given node."""
-        trail: dict[int, int] = {}
+        trail: dict[int, tuple[int, Action]] = {}
 
         to_visit = [start_id]
         while to_visit:
             current = to_visit.pop(0)
             if self.get_node(current).get_terminal():
                 break
-            for connected_node in self.get_node(current).get_connections():
+            for connected_node, action in self.get_node(
+                current,
+            ).get_connections():
                 connected_id = connected_node.get_id()
 
                 if connected_id in trail:
                     continue
                 to_visit.append(connected_id)
 
-                trail[connected_id] = current
+                trail[connected_id] = (current, action)
 
         path: list[int] = []
+        actions: list[Action | None] = []
 
+        trail_action: Action | None = None
         while current != start_id:
             path.insert(0, current)
-            current = trail[current]
+            actions.insert(0, trail_action)
+            current, trail_action = trail[current]
         path.insert(0, start_id)
+        actions.insert(0, trail_action)
+        actions.insert(0, None)
+        if actions.pop() is not None:
+            raise ValueError("should be impossible")
 
-        return path
+        return list(zip(path, actions, strict=True))
 
     def _dfs_internal(
         self,
         start_id: int,
         visited: frozenset[int],
-    ) -> tuple[bool, list[int]]:
+    ) -> tuple[bool, list[tuple[int, Action | None]]]:
         """Return tuple of success bool, node path list.
 
         Internal recursive depth first search helper.
@@ -107,9 +117,9 @@ class Graph:
         current_node = self.get_node(start_id)
 
         if current_node.get_terminal():
-            return True, [start_id]
+            return True, [(start_id, None)]
 
-        for connected_node in current_node.get_connections():
+        for connected_node, action in current_node.get_connections():
             connected_id = connected_node.get_id()
             if connected_id in visited:
                 continue
@@ -120,12 +130,20 @@ class Graph:
             )
 
             if success:
-                return True, [start_id, *path]
+                return True, [(start_id, action), *path]
 
         return False, []
 
-    def dfs(self, start_id: int) -> list[int]:
+    def dfs(self, start_id: int) -> list[tuple[int, Action | None]]:
         """Return the Depth First Search path to terminal starting at given node."""
         success, path = self._dfs_internal(start_id, frozenset((start_id,)))
         assert success
-        return path
+        # fix action offset issue
+        node_ids: list[int] = []
+        actions: list[Action | None] = [None]
+        for node_id, action in path:
+            node_ids.append(node_id)
+            actions.append(action)
+        if actions.pop() is not None:
+            raise ValueError("should be impossible")
+        return list(zip(node_ids, actions, strict=True))

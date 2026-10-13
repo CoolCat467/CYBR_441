@@ -26,6 +26,7 @@ __version__ = "0.0.0"
 __license__ = "GNU General Public License Version 3"
 
 import tkinter as tk
+from pathlib import Path
 from tkinter import messagebox
 from typing import TYPE_CHECKING, Final
 
@@ -33,6 +34,7 @@ from world import World
 
 if TYPE_CHECKING:
     from graph import Graph
+    from state import Action
 
 MAX_GENERATED_TILES: Final = 5
 
@@ -44,7 +46,7 @@ class GraphInterface:
         """Initialize graph interface."""
         self.__world = World(2)
 
-        self.__path: list[int] = []
+        self.__path: list[tuple[int, Action | None]] = []
         self.__current_step = 0
         self.__photo: tk.PhotoImage | None = None
 
@@ -185,18 +187,24 @@ class GraphInterface:
         if not self.__path:
             return
 
-        node_id = self.__path[self.__current_step]
+        node_id, action = self.__path[self.__current_step]
 
         node = self.__graph.get_node(node_id)
 
-        image_path = str(node.get_image())
+        node_image = node.get_image()
+        image_path: Path | None = None
+        if node_image is not None:
+            image_path = Path(node_image).absolute()
 
-        self.__photo = tk.PhotoImage(file=image_path)
+        self.__photo = tk.PhotoImage(file=str(image_path))
 
         self.__image_label.config(image=self.__photo)
 
-        action_text = ""
+        action_text = "<initial state>"
         goal_text = ""
+
+        if action is not None:
+            action_text = action.name
 
         if node.get_terminal():
             goal_text = " (GOAL)"

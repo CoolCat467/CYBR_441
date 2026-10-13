@@ -30,7 +30,7 @@ from pathlib import Path
 
 from graph import Graph
 from node import Node
-from state import State
+from state import Action, State
 
 
 def add_new_state(
@@ -83,10 +83,13 @@ def generate_graph_and_states(
         state_id, state = state_queue.pop(0)
         # print(f'{(state_id, state) = }')
 
-        for redundant, new_state in state.redundant_actions():
+        for action_id, (redundant, new_state) in enumerate(
+            state.redundant_actions(),
+        ):
             # print(f'{(redundant, new_state) = }')
+            action = Action(action_id)
             if redundant:
-                graph.add_edge(state_id, state_id)
+                graph.add_edge(state_id, state_id, action)
                 continue
 
             new_state_id, visited = add_new_state(
@@ -95,7 +98,7 @@ def generate_graph_and_states(
                 graph,
                 id_state_map,
             )
-            graph.add_edge(state_id, new_state_id)
+            graph.add_edge(state_id, new_state_id, action)
 
             if visited:
                 continue
