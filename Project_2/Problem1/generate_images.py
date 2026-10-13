@@ -78,7 +78,9 @@ def state_to_picture(state: State) -> render_images.RenderedPicture:
 def render_node(node: Node, state: State, image_height: int) -> None:
     """Render node-state pair and save resulting image."""
     print(f"* {node.get_id()}\n```\n{state}\n```")
-    image_path = Path(node.get_image()).absolute()
+    node_image = node.get_image()
+    assert node_image is not None
+    image_path = Path(node_image).absolute()
 
     if not image_path.parent.exists():
         makedirs(image_path.parent)

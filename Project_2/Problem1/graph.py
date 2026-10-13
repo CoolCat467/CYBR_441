@@ -68,7 +68,7 @@ class Graph:
         """Add connection from source id to dest id node."""
         self.get_node(source_id).add_connection(self.get_node(dest_id))
 
-    def bfs(self, start_id: int) -> list[Node]:
+    def bfs(self, start_id: int) -> list[int]:
         """Return the Breadth First Search path to terminal starting at given node."""
         trail: dict[int, int] = {}
 
@@ -86,7 +86,7 @@ class Graph:
 
                 trail[connected_id] = current
 
-        path = []
+        path: list[int] = []
 
         while current != start_id:
             path.insert(0, current)
@@ -99,7 +99,7 @@ class Graph:
         self,
         start_id: int,
         visited: frozenset[int],
-    ) -> tuple[bool, list[Node]]:
+    ) -> tuple[bool, list[int]]:
         """Return tuple of success bool, node path list.
 
         Internal recursive depth first search helper.
@@ -124,7 +124,7 @@ class Graph:
 
         return False, []
 
-    def dfs(self, start_id: int) -> list[Node]:
+    def dfs(self, start_id: int) -> list[int]:
         """Return the Depth First Search path to terminal starting at given node."""
         success, path = self._dfs_internal(start_id, frozenset((start_id,)))
         assert success

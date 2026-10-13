@@ -45,9 +45,9 @@ class GraphInterface:
         """Initialize graph interface."""
         self.__world = World(2)
 
-        self.__path: list[Node] = []
+        self.__path: list[int] = []
         self.__current_step = 0
-        self.__photo: str | None = None
+        self.__photo: tk.PhotoImage | None = None
 
         self.__window = tk.Tk()
         self.__window.title("Graph Search")
@@ -190,7 +190,7 @@ class GraphInterface:
 
         node = self.__graph.get_node(node_id)
 
-        image_path = node.get_image()
+        image_path = str(node.get_image())
 
         self.__photo = tk.PhotoImage(file=image_path)
 

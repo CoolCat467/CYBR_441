@@ -51,7 +51,10 @@ FONT_FILE: Final = Path(__file__).absolute().parent / "unifont-15.1.05.otf"
 
 def get_color(color: int, alpha: int = 255) -> pygame.Color:
     """Return color from 24 bit int and optional alpha."""
-    return pygame.Color(*map(int, color.to_bytes(3)), alpha)
+    r, g, b = map(int, color.to_bytes(3))
+    pgcolor = pygame.Color(r, g, b, alpha)
+    assert isinstance(pgcolor, pygame.Color)
+    return pgcolor
 
 
 def char_surf(

@@ -100,7 +100,8 @@ class State(NamedTuple):
         self,
     ) -> tuple[tuple[bool, Self], tuple[bool, Self], tuple[bool, Self]]:
         """Return tuple of bool and new state tuples where True is a redundant action."""
-        return tuple((state is self, state) for state in self.actions())
+        left, clean, right = ((state is self, state) for state in self.actions())
+        return left, clean, right
 
     def terminal(self) -> bool:
         """Return if there is not any dust remaining in the world."""

@@ -55,7 +55,7 @@ class Picture:
         self,
         width: int,
         height: int,
-        symbols: npt.NDArray[np.unicode_] | None = None,
+        symbols: npt.NDArray[np.str_] | None = None,
         foregrounds: npt.NDArray[np.uint32] | None = None,
         backgrounds: npt.NDArray[np.uint32] | None = None,
         alphas: npt.NDArray[np.uint8] | None = None,
@@ -118,9 +118,9 @@ class Picture:
         x: int,
         y: int,
         symbol: str,
-        foreground: np.uint32,
-        background: np.uint32,
-        alpha: np.uint8,
+        foreground: np.uint32 | int,
+        background: np.uint32 | int,
+        alpha: np.uint8 | int,
     ) -> None:
         """Set values for pixel."""
         self.symbol[y, x] = symbol

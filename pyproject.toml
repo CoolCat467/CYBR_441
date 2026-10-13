@@ -4,6 +4,7 @@ package = true
 [tool.mypy]
 files = [
     "Project_1/",
+    "Project_2/",
 ]
 enable_error_code = [
     "truthy-bool",
